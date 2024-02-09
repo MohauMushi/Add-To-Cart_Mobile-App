@@ -4,21 +4,22 @@ import {getDatabase, ref, push, onValue,remove} from "https://www.gstatic.com/fi
 const appSettings = {
     databaseURL: "https://realtime-database-ad18d-default-rtdb.europe-west1.firebasedatabase.app/"
 }
-
+// This code initializes an app, retrieves a database, and sets up references to various elements in the HTML document.
+//  It uses custom or library functions like initializeApp, getDatabase, and ref to perform these tasks.
+//  Additionally, it uses the built-in getElementById function to retrieve specific HTML elements by their IDs
 const app = initializeApp(appSettings)
 const database = getDatabase(app)
 const shoppingListInDB = ref(database, "shoppingList")
-
-// javascript
-
 const inputField = document.getElementById("input-field")
 const addButton = document.getElementById("add-button")
 const shoppingListEl = document.getElementById("shopping-list")
 
+// The code attaches a "click" event listener to the addButton element. 
+// When the button is clicked, it retrieves the value from the inputField element, and
+//  pushes it to the shopping list in the database, logs the value to the console, and clears the input field.
 addButton.addEventListener("click", function(){
     let inputValue = inputField.value
     
-    //  Using the Firebase function 'push' to push inputValue to the database
     push(shoppingListInDB, inputValue)
     
     console.log(inputValue)
@@ -26,7 +27,11 @@ addButton.addEventListener("click", function(){
     clearInputField()
        
 })
-// Call the onValue function with shoppingListInDB as the first argument and function(snapshot) {} as the second argument
+
+// The code sets up a listener for changes in the shoppingListInDB reference.
+//  When the data changes, it retrieves the data, clears the shopping list element,
+//  and appends each item to the shopping list. If there is no data, it displays a message indicating that there are no items yet
+
 onValue(shoppingListInDB, function(snapshot){
     let itemsArray = Object.entries(snapshot.val())
     
@@ -34,7 +39,7 @@ onValue(shoppingListInDB, function(snapshot){
         let itemsArray = Object.entries(snapshot.val())
         
         clearShoppingListEl()
-        // A for loop to iterate on itemsArray and console log each item
+        
     for( let i = 0; i < itemsArray.length; i++){
         
         
@@ -43,8 +48,7 @@ onValue(shoppingListInDB, function(snapshot){
         
         let currentItemID = currentItem[0]
         let currentItemValue = currentItem[1]
-        
-        // Using the appendItemToShoppingListEl(currentItem) function inside of the for loop to append item to the shopping list element for each iteration.  
+         
         appendItemToShoppingListEl(currentItem)
     }
             
@@ -54,21 +58,26 @@ onValue(shoppingListInDB, function(snapshot){
     
 } )
 
+// This function is to clear the contents of the shoppingListEl element, 
+// likely to prepare it for displaying a new set of items or to reset the shopping list
+
 function clearShoppingListEl()
 {
     shoppingListEl.innerHTML = ""    
 }
 
-//Function for Clearing the input field when button is pressed
+// This function is to clear the value of the inputField element, likely to reset it or prepare it for receiving new input
 function clearInputField(){
     inputField.value = ""
 }
-//  Append a new <li> with text content inputValue to the 'shopping-list' <ul>
+
+
+//This function is to create a new li element, set its text content to the itemValue, 
+// add a double-click event listener to remove the item from the database, and append the element to the shoppingListEl element
 function appendItemToShoppingListEl(item){
     
     let itemID = item[0]
     let itemValue = item[1]
-    // shoppingListEl.innerHTML += `<li>${itemValue}</li>`
     let newEl = document.createElement("li")
     
     newEl.classList.add("item")
@@ -77,7 +86,7 @@ function appendItemToShoppingListEl(item){
     
     newEl.addEventListener("dblclick", function(){
         let exactLocationOfShoppintListInDB = ref(database, `shoppingList/${itemID}`)
-        // Remove function to remove the item from the database
+        
         remove(exactLocationOfShoppintListInDB)
     })
     
