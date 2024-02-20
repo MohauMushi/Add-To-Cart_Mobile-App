@@ -22,8 +22,6 @@ addButton.addEventListener("click", function(){
     
     push(shoppingListInDB, inputValue)
     
-    console.log(inputValue)
-    
     clearInputField()
        
 })
@@ -33,8 +31,6 @@ addButton.addEventListener("click", function(){
 //  and appends each item to the shopping list. If there is no data, it displays a message indicating that there are no items yet
 
 onValue(shoppingListInDB, function(snapshot){
-    let itemsArray = Object.entries(snapshot.val())
-    
     if (snapshot.exists()){
         let itemsArray = Object.entries(snapshot.val())
         
@@ -79,8 +75,6 @@ function appendItemToShoppingListEl(item){
     let itemID = item[0]
     let itemValue = item[1]
     let newEl = document.createElement("li")
-    
-    newEl.classList.add("item")
     
     newEl.textContent = itemValue
     
